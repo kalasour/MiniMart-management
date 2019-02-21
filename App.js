@@ -7,9 +7,7 @@
  * @lint-ignore-every XPLATJSCOPYRIGHT1
  */
 
-import React, {
-  Component
-} from 'react';
+import React, { Component } from "react";
 import {
   Platform,
   StyleSheet,
@@ -17,17 +15,24 @@ import {
   View,
   Button,
   AsyncStorage
-} from 'react-native';
-import firebase from '@firebase/app'
-import Login from './Login'
-import Main from './Main'
+} from "react-native";
+import * as firebase from "firebase";
+import Login from "./Login";
+import Main from "./Main";
+import Cam from "./Barcode";
+import SlectedItem from "./SelectedItem";
 import {
-  createStackNavigator, createAppContainer
-} from 'react-navigation';
+  createStackNavigator,
+  createAppContainer,
+  StackActions,
+  NavigationActions
+} from "react-navigation";
+import SelectedItem from "./SelectedItem";
 const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
+  ios: "Press Cmd+R to reload,\n" + "Cmd+D or shake for dev menu",
+  android:
+    "Double tap R on your keyboard to reload,\n" +
+    "Shake or press menu button for dev menu"
 });
 
 var config = {
@@ -41,28 +46,31 @@ var config = {
 firebase.initializeApp(config);
 
 class HomeScreen extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = { LoggedIn: true };
-
   }
+  componentDidMount() {
+    if (this.state.LoggedIn) {
+      const resetAction = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: "Main" })]
+      });
+      this.props.navigation.dispatch(resetAction);
+    }
+  }
+  
   render() {
-    if (this.state.LoggedIn) return (
-      <Main />
-    )
-    else
-      return (
-        <View style={styles.container}>
-          <Text style={styles.welcome}>Welcome to Minimart-Management!</Text>
-          <Text style={styles.instructions}>To get started, please Login</Text>
-          <Button
-            onPress={() => this.props.navigation.navigate('Login')}
-
-            title="Login"
-          />
-        </View>
-      )
+    return (
+      <View style={styles.container}>
+        <Text style={styles.welcome}>Welcome to Minimart-Management!</Text>
+        <Text style={styles.instructions}>To get started, please Login</Text>
+        <Button
+          onPress={() => this.props.navigation.navigate("Login")}
+          title="Login"
+        />
+      </View>
+    );
   }
 }
 
@@ -70,7 +78,9 @@ const AppNavigator = createStackNavigator(
   {
     Home: HomeScreen,
     Login: Login,
-    Main: Main
+    Main: Main,
+    Cam: Cam,
+    SelectedItem: SelectedItem
   },
   {
     initialRouteName: "Home"
@@ -82,18 +92,18 @@ export default createAppContainer(AppNavigator);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F5FCFF"
   },
   welcome: {
     fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+    textAlign: "center",
+    margin: 10
   },
   instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+    textAlign: "center",
+    color: "#333333",
+    marginBottom: 5
+  }
 });

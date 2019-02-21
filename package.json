@@ -7,12 +7,15 @@
     "test": "jest"
   },
   "dependencies": {
-    "firebase": "^5.8.3",
+    "barcode-reader": "^1.6.1",
+    "firebase": "^5.0.3",
     "react": "16.6.3",
     "react-native": "0.58.4",
+    "react-native-camera": "^1.11.2",
     "react-native-circle-button": "^1.0.9",
     "react-native-elements": "^1.0.0",
     "react-native-gesture-handler": "^1.0.15",
+    "react-native-scan-barcode": "^3.1.5",
     "react-native-vector-icons": "^6.3.0",
     "react-navigation": "^3.3.0"
   },

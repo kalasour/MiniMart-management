@@ -134,11 +134,15 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-camera')
+    implementation project(':react-native-camera')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-gesture-handler')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    compile project(':react-native-scan-barcode')
+       
 }
 
 // Run this once to be able to run the application with BUCK
