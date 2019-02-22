@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Alert } from "react-native";
+import { StyleSheet, Text, View, Alert, Image } from "react-native";
 import Scanbarcode from "react-native-scan-barcode";
 import { RNCamera } from "react-native-camera";
+import { Thumbnail } from "native-base";
 export default class Barcode extends Component {
   constructor(props) {
     super(props);
@@ -37,25 +38,19 @@ export default class Barcode extends Component {
           onBarCodeRead={e => {
             // console.log(e);
             // this.setState({ BarcodeID: e.data });
-            this.props.navigation.navigate('SelectedItem',{BarcodeID:e.data})
+            this.props.navigation.navigate("SelectedItem", {
+              BarcodeID: e.data
+            });
           }}
           permissionDialogTitle={"Permission to use camera"}
           permissionDialogMessage={
             "We need your permission to use your camera phone"
           }
-          barcodeFinderVisible={true}
-          barcodeFinderWidth={280}
-          barcodeFinderHeight={220}
-          barcodeFinderBorderColor="red"
-          barcodeFinderBorderWidth={2}
         >
-          {/* <Text
-            style={{
-              backgroundColor: "white"
-            }}
-          >
-            {this.state.BarcodeID}
-          </Text> */}
+          <Image
+            style={{ flex: 1, width: 250, height: 250, resizeMode: "contain" }}
+            source={require("./assets/rect.png")}
+          />
         </RNCamera>
       </View>
 
