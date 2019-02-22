@@ -59,7 +59,7 @@ class HomeScreen extends React.Component {
       this.props.navigation.dispatch(resetAction);
     }
   }
-  
+
   render() {
     return (
       <View style={styles.container}>
@@ -73,12 +73,16 @@ class HomeScreen extends React.Component {
     );
   }
 }
-
 const AppNavigator = createStackNavigator(
   {
     Home: HomeScreen,
     Login: Login,
-    Main: Main,
+    Main: {
+      screen: Main,
+      navigationOptions: {
+        header: null
+      }
+    },
     Cam: Cam,
     SelectedItem: SelectedItem
   },

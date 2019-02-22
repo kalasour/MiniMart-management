@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { View, Alert } from "react-native";
-import { Text, Button, Input } from "react-native-elements";
+import { View, Alert, Button } from "react-native";
+import { Text, Input } from "react-native-elements";
+
 import * as firebase from "firebase";
 import {
   createStackNavigator,
@@ -90,6 +91,25 @@ export default class SelectedItem extends Component {
     });
     this.props.navigation.dispatch(resetAction);
   };
+  Delete = async () => {
+    let promise = firebase
+      .database()
+      .ref("Stock")
+      .child(this.state.BarcodeID)
+      .remove();
+    setTimeout(() => {
+      if (promise._65 == 0) {
+        Alert.alert("Lost connections!");
+      }
+      return;
+    }, 5000);
+    await promise;
+    const resetAction = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: "Main" })]
+    });
+    this.props.navigation.dispatch(resetAction);
+  };
   render() {
     return (
       <View>
@@ -98,6 +118,7 @@ export default class SelectedItem extends Component {
           placeholder="Barcode ID"
           value={this.state.BarcodeID}
           onChangeText={typing => this.setState({ BarcodeID: typing })}
+          
         />
         <Input
           style={{ width: "70%" }}
@@ -153,14 +174,27 @@ export default class SelectedItem extends Component {
             this.setState({ Discount_amount: typing.replace(/[^0-9]/g, "") })
           }
         />
-        <View style={{ height: 25 }} />
+        <View style={{ height: 10 }} />
         <Button
           onPress={() => {
-            this.AddToStock();
-            this.AddToDataSet();
+            if (this.state.BarcodeID == "") {
+              alert("Please type Barcode ID.");
+            } else {
+              this.AddToStock();
+              this.AddToDataSet();
+            }
           }}
-          title="Add"
-          type="outline"
+          title="Update"
+        />
+        <View style={{ height: 10 }} />
+        <Button
+          color="#ff0000"
+          onPress={() => {
+            if (this.state.BarcodeID == "") {
+              alert("Please type Barcode ID.");
+            } else this.Delete();
+          }}
+          title="Delete"
         />
       </View>
     );
