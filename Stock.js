@@ -84,7 +84,7 @@ export default class Stock extends Component {
 
     return (
       <Container>
-        <Header searchBar rounded>
+        <Header searchBar rounded androidStatusBarColor="#87cefa" style={{backgroundColor: "#87cefa"}}>
           <Item>
             <Icon name="ios-search" />
             <Input
