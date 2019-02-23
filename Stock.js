@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, Alert } from "react-native";
-import {} from "react-native-elements";
+import { } from "react-native-elements";
 import { DrawerActions } from "react-navigation-drawer";
 import {
   Container,
@@ -18,7 +18,9 @@ import {
   Icon,
   Item,
   Input,
-  Button
+  Button,
+  Footer,
+  FooterTab
 } from "native-base";
 import * as firebase from "firebase";
 import { createStackNavigator, createAppContainer } from "react-navigation";
@@ -75,7 +77,7 @@ export default class Stock extends Component {
           this.state.SearchField.toLowerCase()
         ) != -1 ||
         Item.key.toLowerCase().search(this.state.SearchField.toLowerCase()) !=
-          -1
+        -1
       )
         return (
           <Card key={Item.key}>
@@ -110,6 +112,7 @@ export default class Stock extends Component {
     });
 
     return (
+
       <Container>
         <Header
           searchBar
@@ -136,10 +139,12 @@ export default class Stock extends Component {
             <Icon name="ios-search" />
           </Item>
         </Header>
-        <Row style={{ height: 40, alignItems: "center", marginTop: 10 }}>
-          <Col>
+        <Content padder>{ListItem}</Content>
+        <Footer  >
+          <FooterTab style={{ backgroundColor: "#87cefa" }}>
             <Button
-              info
+              vertical
+
               style={{ alignSelf: "center" }}
               onPress={() => {
                 this.props.navigation.navigate("SelectedItem", {
@@ -147,23 +152,22 @@ export default class Stock extends Component {
                 });
               }}
             >
-              <Text> Add </Text>
+              <Icon style={{ color: "#ffffff" }} name="ios-add"></Icon>
+              <Text style={{ color: "#ffffff" }}>Add</Text>
             </Button>
-          </Col>
-          <Col>
-            <Button
-              info
+            <Button vertical
               style={{ alignSelf: "center" }}
               onPress={() => {
                 this.props.navigation.navigate("Cam");
               }}
             >
-              <Text> Scan </Text>
+              <Icon style={{ color: "#ffffff" }} name="ios-qr-scanner"></Icon>
+              <Text style={{ color: "#ffffff" }}>Scan</Text>
             </Button>
-          </Col>
-        </Row>
-        <Content padder>{ListItem}</Content>
+          </FooterTab>
+        </Footer>
       </Container>
+
     );
   }
 }
