@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, Alert, Button } from "react-native";
 import { Text, Input } from "react-native-elements";
-
+import { Container, Header, Content, Form, Item, Label } from 'native-base';
 import * as firebase from "firebase";
 import {
   createStackNavigator,
@@ -113,13 +113,12 @@ export default class SelectedItem extends Component {
   render() {
     return (
       <View>
-        <Input
-          style={{ width: "70%" }}
-          placeholder="Barcode ID"
-          value={this.state.BarcodeID}
-          onChangeText={typing => this.setState({ BarcodeID: typing })}
-          
-        />
+          <Input
+            style={{ width: "70%" }}
+            placeholder="Barcode ID"
+            value={this.state.BarcodeID}
+            onChangeText={typing => this.setState({ BarcodeID: typing })}
+          />
         <Input
           style={{ width: "70%" }}
           placeholder="JM ID"

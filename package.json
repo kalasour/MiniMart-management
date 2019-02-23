@@ -16,7 +16,6 @@
     "react-native-circle-button": "^1.0.9",
     "react-native-elements": "^1.0.0",
     "react-native-gesture-handler": "^1.0.15",
-    "react-native-scan-barcode": "^3.1.5",
     "react-native-vector-icons": "^6.3.0",
     "react-navigation": "^3.3.0"
   },

@@ -10,7 +10,6 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.safaeean.barcodescanner.BarcodeScannerPackage;
 import java.util.Arrays;
 import java.util.List;
 public class MainApplication extends Application implements ReactApplication {
@@ -27,8 +26,7 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new RNCameraPackage(),
             new VectorIconsPackage(),
-            new RNGestureHandlerPackage(),
-            new BarcodeScannerPackage()
+            new RNGestureHandlerPackage()
       );
     }
 
