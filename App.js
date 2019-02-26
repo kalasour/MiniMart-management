@@ -20,7 +20,8 @@ import * as firebase from "firebase";
 import Login from "./Login";
 import Main from "./Main";
 import Cam from "./Barcode";
-import SlectedItem from "./SelectedItem";
+import ignoreWarnings from 'react-native-ignore-warnings';
+ignoreWarnings('Setting a timer');
 import {
   createStackNavigator,
   createAppContainer,

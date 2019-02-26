@@ -23,8 +23,12 @@ import {
   FooterTab
 } from "native-base";
 import * as firebase from "firebase";
-import { createStackNavigator, createAppContainer } from "react-navigation";
 export default class Stock extends Component {
+  static navigationOptions = {
+    drawerIcon:({tintColor})=>{
+      return(<Icon name="database" style={{width:30,color:tintColor}} type="AntDesign" />);
+    }
+  }
   constructor(props) {
     super(props);
 
