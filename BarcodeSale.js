@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { StyleSheet, Text, View, Alert, Image } from "react-native";
 import { RNCamera } from "react-native-camera";
 import { Thumbnail } from "native-base";
-export default class Barcode extends Component {
+export default class BarcodeSale extends Component {
   constructor(props) {
     super(props);
 

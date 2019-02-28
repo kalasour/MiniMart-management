@@ -3,7 +3,6 @@ import { View, Text } from "react-native";
 import { Button } from "react-native-elements";
 import {
   createDrawerNavigator,
-  createAppContainer,
 } from "react-navigation";
 import Stock from "./Stock";
 import Sales from "./Sales";
@@ -48,4 +47,4 @@ const AppNavigator = createDrawerNavigator(
     drawerWidth: 200
   }
 );
-export default createAppContainer(AppNavigator);
+export default AppNavigator;

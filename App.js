@@ -20,6 +20,7 @@ import * as firebase from "firebase";
 import Login from "./Login";
 import Main from "./Main";
 import Cam from "./Barcode";
+import BarcodeSale from './BarcodeSale'
 import ignoreWarnings from 'react-native-ignore-warnings';
 ignoreWarnings('Setting a timer');
 import {
@@ -85,6 +86,7 @@ const AppNavigator = createStackNavigator(
       }
     },
     Cam: Cam,
+    BarcodeSale:BarcodeSale,
     SelectedItem: SelectedItem
   },
   {
