@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { DrawerActions } from "react-navigation-drawer";
-import { Badge, Text, Icon, Container, Header, Content, Form, Button, Item, Input, Label, List, ListItem, Card, CardItem, Col, Left, Right, Row } from 'native-base'
+import { Badge, Text, Icon, Container, Header, Content, Form, Button, Item, Input, Label, List, ListItem, Card, CardItem, Col, Left, Right, Row, Footer, FooterTab } from 'native-base'
 import * as firebase from "firebase";
 
 
@@ -17,7 +17,14 @@ export default class Sales extends Component {
     this.state = {
       List: {},
       Stock: {},
-      SearchField: ""
+      SearchField: "",
+      TotalPrice: () => {
+        return Object.keys(this.state.List).map(key => {
+          return this.state.List[key].Price;
+        }).reduce((total, num) => {
+          return total + num
+        }, 0).toFixed(2)
+      }
     };
   }
 
@@ -87,12 +94,12 @@ export default class Sales extends Component {
                     <Row><Text>{this.state.List[key].Detail}    {this.state.List[key].Unit_price}.-</Text></Row>
                     <Row><Text>:{key}</Text></Row>
                     <Row style={{ alignItems: 'center' }} >
-                      <Text>Discount: </Text>
+                      <Badge success><Text>Discount: </Text></Badge>
                       <Badge>
                         <Text>-{this.state.List[key].Discount_per}%</Text>
                       </Badge>
                       <Badge>
-                        <Text>-{this.state.List[key].Discount_amount}</Text>
+                        <Text>-{this.state.List[key].Discount_amount}.-</Text>
                       </Badge>
                     </Row>
                   </Col>
@@ -218,6 +225,16 @@ export default class Sales extends Component {
         </Header>
         <List>{SearchList}</List>
         <Content padder>{Insale()}</Content>
+        <Footer style={{ backgroundColor: "#87cefa" }} >
+          <FooterTab style={{ backgroundColor: "#ffffff" }}>
+            <Button info bordered ><Text>{this.state.TotalPrice().toString()}</Text></Button>
+          </FooterTab>
+        </Footer>
+        <Footer style={{ backgroundColor: "#87cefa" }} >
+          <FooterTab >
+            <Button info disabled={(Object.keys(this.state.List).length <= 0)} block><Text style={{ color: 'white' }}>Buy</Text></Button>
+          </FooterTab>
+        </Footer>
       </Container>
     )
   }
