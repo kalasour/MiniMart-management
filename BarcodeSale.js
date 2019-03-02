@@ -77,7 +77,7 @@ export default class BarcodeSale extends Component {
               onPress={() => {
                 const { navigation } = this.props;
                 navigation.getParam("AddToList", "NO-ID")(this.state.BarcodeID)
-                
+
                 // this.props.navigation.goBack();
               }}><Text>{this.state.BarcodeID}</Text></Button>
           </RNCamera>

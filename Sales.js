@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { DrawerActions } from "react-navigation-drawer";
-import { Toast, Badge, Text, Icon, Container, Header, Content, Form, Button, Item, Input, Label, List, ListItem, Card, CardItem, Col, Left, Right, Row, Footer, FooterTab } from 'native-base'
+import { Toast, Badge, Text, Icon, Container, Header, Content, Form, Button, Item, Input, Label, List, ListItem, Card, CardItem, Col, Left, Right, Row, Footer, FooterTab, Root } from 'native-base'
 import * as firebase from "firebase";
 
 
@@ -228,6 +228,7 @@ export default class Sales extends Component {
           );
     });
     return (
+
       <Container>
         <Header
           searchBar
@@ -261,46 +262,49 @@ export default class Sales extends Component {
             </Button>
           </Item>
         </Header>
-        <List>{SearchList}</List>
-        <Content padder>{Insale()}</Content>
+        <Root>
+          <List>{SearchList}</List>
+          <Content padder>{Insale()}</Content>
 
 
-        <Footer style={{ backgroundColor: "#87cefa", height: 70, borderTopWidth: 1, borderColor: '#808080' }}  >
-          <FooterTab style={{ backgroundColor: "#ffffff", justifyContent: 'flex-end' }}>
-            <Col style={{ justifyContent: 'flex-end', marginHorizontal: 5 }}>
-              <Row style={{ justifyContent: 'flex-start' }}><Text style={{ fontSize: 12, color: "#000000" }}>Total Discounted : {this.state.TotalDiscounted().toString()} .-  </Text></Row>
-              <Row style={{ justifyContent: 'flex-start' }}><Text style={{ fontSize: 12, color: "#000000" }}>Total Ordered : {this.state.TotalOrdered().toString()}  </Text></Row>
-              <Row style={{ justifyContent: 'flex-start' }}><Text style={{ fontSize: 12, color: "#000000" }}>Total Piece : {this.state.TotalPiece().toString()}  </Text></Row>
-              <Row style={{ justifyContent: 'flex-start' }}><Text style={{ fontSize: 18, color: "#000000" }}>Total Price : {this.state.TotalPrice().toString()} .-  </Text></Row>
-            </Col>
-          </FooterTab>
-          <FooterTab style={{ backgroundColor: "#ffffff", justifyContent: 'center', borderLeftWidth: 1, borderColor: '#808080' }}>
-            <Content >
-              <Form >
-                <Item floatingLabel >
-                  <Label>Customer ID :</Label>
-                  <Input value={this.state.JM_ID}
-                    onChangeText={typing => this.setState({ Customer_id: typing })} />
+          <Footer style={{ backgroundColor: "#87cefa", height: 70, borderTopWidth: 1, borderColor: '#808080' }}  >
+            <FooterTab style={{ backgroundColor: "#ffffff", justifyContent: 'flex-end' }}>
+              <Col style={{ justifyContent: 'flex-end', marginHorizontal: 5 }}>
+                <Row style={{ justifyContent: 'flex-start' }}><Text style={{ fontSize: 12, color: "#000000" }}>Total Discounted : {this.state.TotalDiscounted().toString()} .-  </Text></Row>
+                <Row style={{ justifyContent: 'flex-start' }}><Text style={{ fontSize: 12, color: "#000000" }}>Total Ordered : {this.state.TotalOrdered().toString()}  </Text></Row>
+                <Row style={{ justifyContent: 'flex-start' }}><Text style={{ fontSize: 12, color: "#000000" }}>Total Piece : {this.state.TotalPiece().toString()}  </Text></Row>
+                <Row style={{ justifyContent: 'flex-start' }}><Text style={{ fontSize: 18, color: "#000000" }}>Total Price : {this.state.TotalPrice().toString()} .-  </Text></Row>
+              </Col>
+            </FooterTab>
+            <FooterTab style={{ backgroundColor: "#ffffff", justifyContent: 'center', borderLeftWidth: 1, borderColor: '#808080' }}>
+              <Content >
+                <Form >
+                  <Item floatingLabel >
+                    <Label>Customer ID :</Label>
+                    <Input value={this.state.Customer_id}
+                      onChangeText={typing => this.setState({ Customer_id: typing })} />
 
-                </Item>
+                  </Item>
 
-              </Form>
-            </Content>
-          </FooterTab>
+                </Form>
+              </Content>
+            </FooterTab>
 
-        </Footer>
-        <Footer style={{ backgroundColor: "#87cefa" }} >
-          <FooterTab >
-            <Button info disabled={(Object.keys(this.state.List).length <= 0)} block onPress={() => {
-              Object.keys(this.state.List).map(key => {
-                delete this.state.List[key]
-              })
-              this.setState({ Customer_id: '' })
-              alert("Success!")
-            }} ><Text style={{ color: 'white' }}>Sale</Text><Icon style={{ width: 30, color: "#ffffff" }} name="shopping-cart" type="Feather" /></Button>
-          </FooterTab>
-        </Footer>
+          </Footer>
+          <Footer style={{ backgroundColor: "#87cefa" }} >
+            <FooterTab >
+              <Button info disabled={(Object.keys(this.state.List).length <= 0)} block onPress={() => {
+                Object.keys(this.state.List).map(key => {
+                  delete this.state.List[key]
+                })
+                this.setState({ Customer_id: '' })
+                alert("Success!")
+              }} ><Text style={{ color: 'white' }}>Sale</Text><Icon style={{ width: 30, color: "#ffffff" }} name="shopping-cart" type="Feather" /></Button>
+            </FooterTab>
+          </Footer>
+        </Root>
       </Container>
+
     )
   }
 }
