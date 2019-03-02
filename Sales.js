@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { DrawerActions } from "react-navigation-drawer";
-import { Badge, Text, Icon, Container, Header, Content, Form, Button, Item, Input, Label, List, ListItem, Card, CardItem, Col, Left, Right, Row, Footer, FooterTab } from 'native-base'
+import { Toast, Badge, Text, Icon, Container, Header, Content, Form, Button, Item, Input, Label, List, ListItem, Card, CardItem, Col, Left, Right, Row, Footer, FooterTab } from 'native-base'
 import * as firebase from "firebase";
 
 
@@ -80,11 +80,23 @@ export default class Sales extends Component {
       });
   };
   AddToList = async (key) => {
-    if(this.state.Stock[key]==null){
+    if (this.state.Stock[key] == null) {
       alert('No item in Stock'); return;
     }
-    if (this.state.List[key] != null) { if (this.state.List[key].QT < this.state.Stock[key].QT) this.state.List[key].QT++; else { alert('No more item in Stock'); return; } }
+    if (this.state.List[key] != null) {
+      if (this.state.List[key].QT < this.state.Stock[key].QT) {
+        this.state.List[key].QT++; Toast.show({
+          text: 'Added!',
+          position: "top"
+        })
+      }
+      else { alert('No more item in Stock'); return; }
+    }
     else {
+      Toast.show({
+        text: 'Added!',
+        position: "top"
+      })
       if (this.state.Stock[key].QT <= 0) { alert('No more item in Stock'); return; }
       this.state.List[key] = Object.assign({}, this.state.Stock[key])
       this.state.List[key].QT = 1;
@@ -242,7 +254,7 @@ export default class Sales extends Component {
             <Button transparent
               style={{ alignSelf: "center" }}
               onPress={() => {
-                this.props.navigation.navigate("BarcodeSale",{AddToList:this.AddToList});
+                this.props.navigation.navigate("BarcodeSale", { AddToList: this.AddToList });
               }}
             >
               <Icon style={{ color: "#87cefa" }} name="ios-qr-scanner"></Icon>
@@ -280,10 +292,10 @@ export default class Sales extends Component {
         <Footer style={{ backgroundColor: "#87cefa" }} >
           <FooterTab >
             <Button info disabled={(Object.keys(this.state.List).length <= 0)} block onPress={() => {
-              Object.keys(this.state.List).map(key=>{
+              Object.keys(this.state.List).map(key => {
                 delete this.state.List[key]
               })
-              this.setState({Customer_id:''})
+              this.setState({ Customer_id: '' })
               alert("Success!")
             }} ><Text style={{ color: 'white' }}>Sale</Text><Icon style={{ width: 30, color: "#ffffff" }} name="shopping-cart" type="Feather" /></Button>
           </FooterTab>

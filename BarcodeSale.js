@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Alert, Image } from "react-native";
+import { StyleSheet, View, Alert, Image, Vibration, PermissionsAndroid } from "react-native";
 import { RNCamera } from "react-native-camera";
-import { Thumbnail } from "native-base";
+import { Thumbnail, Text, Button, Toast, Root } from "native-base";
 export default class BarcodeSale extends Component {
   constructor(props) {
     super(props);
@@ -13,9 +13,30 @@ export default class BarcodeSale extends Component {
       BarcodeID: ""
     };
   }
-
+  async requestVibratePermission() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.VIBRATE,
+        {
+          title: 'Vibration Permission',
+          message:
+            'this App needs access to your vibration ',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the vibration');
+      } else {
+        console.log('Camera permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
   componentDidMount() {
-    // this.requestCameraPermission();
+    // this.requestVibratePermission();
   }
   barcodeReceived(e) {
     Alert.alert("Barcode: " + e.data);
@@ -28,34 +49,40 @@ export default class BarcodeSale extends Component {
   }
   render() {
     return (
-      <View style={styles.container}>
-        <RNCamera
-          ref={ref => {
-            this.camera = ref;
-          }}
-          style={styles.preview}
-          onBarCodeRead={async(e) => {
-            // console.log(e);
-            // this.setState({ BarcodeID: e.data });
-            // this.props.navigation.navigate("SelectedItem", {
-            //   BarcodeID: e.data
-            // });
+      <Root>
+        <View style={styles.container}>
+          <RNCamera
+            ref={ref => {
+              this.camera = ref;
+            }}
+            style={styles.preview}
+            onBarCodeRead={e => {
+              if (e.data != this.state.BarcodeID) {
+                Vibration.vibrate(100);
 
-            const { navigation } = this.props;
-            await navigation.getParam("AddToList", "NO-ID")(e.data)
-            await this.props.navigation.goBack();
-          }}
-          permissionDialogTitle={"Permission to use camera"}
-          permissionDialogMessage={
-            "We need your permission to use your camera phone"
-          }
-        >
-          <Image
-            style={{ flex: 1, width: 250, height: 250, resizeMode: "contain" }}
-            source={require("./assets/rect.png")}
-          />
-        </RNCamera>
-      </View>
+              }
+              this.setState({ BarcodeID: e.data });
+            }}
+            permissionDialogTitle={"Permission to use camera"}
+            permissionDialogMessage={
+              "We need your permission to use your camera phone"
+            }
+          >
+            <Image
+              style={{ flex: 1, width: 250, height: 250, resizeMode: "contain" }}
+              source={require("./assets/rect.png")}
+            />
+            <Button block bordered
+              style={{ borderColor: "#87cefa" }}
+              onPress={() => {
+                const { navigation } = this.props;
+                navigation.getParam("AddToList", "NO-ID")(this.state.BarcodeID)
+                
+                // this.props.navigation.goBack();
+              }}><Text>{this.state.BarcodeID}</Text></Button>
+          </RNCamera>
+        </View>
+      </Root>
     );
   }
 }
