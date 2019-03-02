@@ -24,6 +24,27 @@ export default class Sales extends Component {
         }).reduce((total, num) => {
           return total + num
         }, 0).toFixed(2)
+      },
+      TotalDiscounted: () => {
+        return Object.keys(this.state.List).map(key => {
+          return this.state.List[key].Discounted;
+        }).reduce((total, num) => {
+          return total + num
+        }, 0).toFixed(2)
+      },
+      TotalOrdered: () => {
+        return Object.keys(this.state.List).map(key => {
+          return this.state.List[key].Price;
+        }).reduce((total, num) => {
+          return total + 1
+        }, 0)
+      },
+      TotalPiece: () => {
+        return Object.keys(this.state.List).map(key => {
+          return this.state.List[key].QT;
+        }).reduce((total, num) => {
+          return total + num
+        }, 0)
       }
     };
   }
@@ -44,6 +65,7 @@ export default class Sales extends Component {
       discount_per = (this.state.List[key].Discount_per / 100) * this.state.List[key].Unit_price
     }
     discount_amount = this.state.List[key].Discount_amount;
+    this.state.List[key].Discounted = (parseFloat(discount_amount) + parseFloat(discount_per)) * this.state.List[key].QT;
     this.state.List[key].Price = (this.state.List[key].Unit_price - discount_amount - discount_per) * this.state.List[key].QT;
   }
   GetData = async () => {
@@ -225,10 +247,31 @@ export default class Sales extends Component {
         </Header>
         <List>{SearchList}</List>
         <Content padder>{Insale()}</Content>
-        <Footer style={{ backgroundColor: "#87cefa" }} >
-          <FooterTab style={{ backgroundColor: "#ffffff" }}>
-            <Button info bordered ><Text>{this.state.TotalPrice().toString()}</Text></Button>
+
+
+        <Footer style={{ backgroundColor: "#87cefa", height: 70, borderTopWidth: 1, borderColor: '#808080' }}  >
+          <FooterTab style={{ backgroundColor: "#ffffff", justifyContent: 'flex-end' }}>
+            <Col style={{ justifyContent: 'flex-end', marginHorizontal: 5 }}>
+              <Row style={{ justifyContent: 'flex-start' }}><Text style={{ fontSize: 12, color: "#000000" }}>Total Discounted : {this.state.TotalDiscounted().toString()} .-  </Text></Row>
+              <Row style={{ justifyContent: 'flex-start' }}><Text style={{ fontSize: 12, color: "#000000" }}>Total Ordered : {this.state.TotalOrdered().toString()}  </Text></Row>
+              <Row style={{ justifyContent: 'flex-start' }}><Text style={{ fontSize: 12, color: "#000000" }}>Total Piece : {this.state.TotalPiece().toString()}  </Text></Row>
+              <Row style={{ justifyContent: 'flex-start' }}><Text style={{ fontSize: 18, color: "#000000" }}>Total Price : {this.state.TotalPrice().toString()} .-  </Text></Row>
+            </Col>
           </FooterTab>
+          <FooterTab style={{ backgroundColor: "#ffffff", justifyContent: 'center', borderLeftWidth: 1, borderColor: '#808080' }}>
+            <Content >
+              <Form >
+                <Item floatingLabel >
+                  <Label>Customer ID :</Label>
+                  <Input value={this.state.JM_ID}
+                    onChangeText={typing => this.setState({ Customer_id: typing })} />
+
+                </Item>
+
+              </Form>
+            </Content>
+          </FooterTab>
+
         </Footer>
         <Footer style={{ backgroundColor: "#87cefa" }} >
           <FooterTab >
