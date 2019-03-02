@@ -18,6 +18,7 @@ export default class Sales extends Component {
       List: {},
       Stock: {},
       SearchField: "",
+      Customer_id: '',
       TotalPrice: () => {
         return Object.keys(this.state.List).map(key => {
           return this.state.List[key].Price;
@@ -79,6 +80,9 @@ export default class Sales extends Component {
       });
   };
   AddToList = async (key) => {
+    if(this.state.Stock[key]==null){
+      alert('No item in Stock'); return;
+    }
     if (this.state.List[key] != null) { if (this.state.List[key].QT < this.state.Stock[key].QT) this.state.List[key].QT++; else { alert('No more item in Stock'); return; } }
     else {
       if (this.state.Stock[key].QT <= 0) { alert('No more item in Stock'); return; }
@@ -238,7 +242,7 @@ export default class Sales extends Component {
             <Button transparent
               style={{ alignSelf: "center" }}
               onPress={() => {
-                this.props.navigation.navigate("BarcodeSale");
+                this.props.navigation.navigate("BarcodeSale",{AddToList:this.AddToList});
               }}
             >
               <Icon style={{ color: "#87cefa" }} name="ios-qr-scanner"></Icon>
@@ -275,7 +279,13 @@ export default class Sales extends Component {
         </Footer>
         <Footer style={{ backgroundColor: "#87cefa" }} >
           <FooterTab >
-            <Button info disabled={(Object.keys(this.state.List).length <= 0)} block><Text style={{ color: 'white' }}>Buy</Text></Button>
+            <Button info disabled={(Object.keys(this.state.List).length <= 0)} block onPress={() => {
+              Object.keys(this.state.List).map(key=>{
+                delete this.state.List[key]
+              })
+              this.setState({Customer_id:''})
+              alert("Success!")
+            }} ><Text style={{ color: 'white' }}>Sale</Text><Icon style={{ width: 30, color: "#ffffff" }} name="shopping-cart" type="Feather" /></Button>
           </FooterTab>
         </Footer>
       </Container>

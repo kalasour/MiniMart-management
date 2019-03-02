@@ -34,12 +34,16 @@ export default class BarcodeSale extends Component {
             this.camera = ref;
           }}
           style={styles.preview}
-          onBarCodeRead={e => {
+          onBarCodeRead={async(e) => {
             // console.log(e);
             // this.setState({ BarcodeID: e.data });
-            this.props.navigation.navigate("SelectedItem", {
-              BarcodeID: e.data
-            });
+            // this.props.navigation.navigate("SelectedItem", {
+            //   BarcodeID: e.data
+            // });
+
+            const { navigation } = this.props;
+            await navigation.getParam("AddToList", "NO-ID")(e.data)
+            await this.props.navigation.goBack();
           }}
           permissionDialogTitle={"Permission to use camera"}
           permissionDialogMessage={
