@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
+import { Modal, TouchableHighlight, View, Alert } from 'react-native';
 import { DrawerActions } from "react-navigation-drawer";
-import { Toast, Badge, Text, Icon, Container, Header, Content, Form, Button, Item, Input, Label, List, ListItem, Card, CardItem, Col, Left, Right, Row, Footer, FooterTab, Root } from 'native-base'
+import { Toast, Badge, Text, Icon, Container, Header, Content, Form, Button, Item, Input, Label, List, ListItem, Card, CardItem, Col, Left, Right, Row, Footer, FooterTab, Root, Body, Title } from 'native-base'
 import * as firebase from "firebase";
 
 
@@ -15,10 +16,24 @@ export default class Sales extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      ModalConfirm: false,
       List: {},
       Stock: {},
+      Customers: {},
       SearchField: "",
       Customer_id: '',
+      CurrentCustomer: () => {
+        var customer = null
+
+        Object.keys(this.state.Customers).map(key => {
+          var Item = this.state.Customers[key]
+          if (Item.Name.toLowerCase() == this.state.Customer_id.toLowerCase() || key.toLowerCase() == this.state.Customer_id.toLowerCase())
+            customer = Item
+        })
+
+        if (customer == null) return (<Text style={{color:'rgba(255,0,0,1)'}}>Unknow customer</Text>)
+        else return (<Text style={{color:'rgb(0,0,255)'}}>{customer.Name}</Text>)
+      },
       TotalPrice: () => {
         return Object.keys(this.state.List).map(key => {
           return this.state.List[key].Price;
@@ -53,7 +68,12 @@ export default class Sales extends Component {
   componentDidMount() {
     this.GetData();
   }
-
+  resetState = () => {
+    Object.keys(this.state.List).map(key => {
+      delete this.state.List[key]
+    })
+    this.setState({ Customer_id: '' })
+  }
   calPrice = (key) => {
     let discount_per = 0, discount_amount = 0;
     if (this.state.List[key].Discount_per == null) {
@@ -78,6 +98,15 @@ export default class Sales extends Component {
           Stock: snapshot.val()
         });
       });
+
+    await firebase
+      .database()
+      .ref("Customers")
+      .on("value", snapshot => {
+        this.setState({
+          Customers: snapshot.val()
+        });
+      });
   };
   AddToList = async (key) => {
     if (this.state.Stock[key] == null) {
@@ -85,7 +114,8 @@ export default class Sales extends Component {
     }
     if (this.state.List[key] != null) {
       if (this.state.List[key].QT < this.state.Stock[key].QT) {
-        this.state.List[key].QT++; Toast.show({
+        this.state.List[key].QT++;
+        Toast.show({
           text: 'Added!',
           position: "top"
         })
@@ -104,6 +134,7 @@ export default class Sales extends Component {
     }
     this.setState({})
   }
+
   render() {
     resetSearchField = () => {
       if (this.state.SearchField != "")
@@ -161,40 +192,6 @@ export default class Sales extends Component {
                     </Row>
                   </Col>
                 </Right>
-                {/* <Col>
-                  <Row>
-                    <Left style={{ alignSelf: 'flex-start' }}>
-                      <Text>{this.state.List[key].Detail}    {this.state.List[key].Unit_price}.-    </Text>
-                      <Badge>
-                        <Text>-{this.state.List[key].Discount_per}%</Text>
-                      </Badge>
-                    </Left>
-                    <Right>
-                      <Button
-                        style={{ width: 30, height: 30, alignSelf: 'flex-end' }}
-                        transparent
-                        onPress={() => {
-                          delete this.state.List[key];
-                          this.setState({});
-                        }}
-                      >
-                        <Icon style={{ fontSize: 30 }} name="close" style={{ color: "#808080" }} />
-                      </Button>
-
-                    </Right>
-                  </Row>
-                  <Row>
-                    <Left style={{ alignSelf: 'flex-start' }}>
-                      <Row><Text>:{key}</Text></Row>
-                    </Left>
-                    <Right>
-                      <Row><Button disabled={(this.state.List[key].QT <= 1)} onPress={() => { this.state.List[key].QT--; this.setState({}) }} transparent style={{ width: 30, height: 30, alignSelf: 'center' }} ><Icon style={{ fontSize: 30 }} type='Entypo' name='squared-minus'></Icon></Button><Button bordered style={{ marginHorizontal: 10 }} ><Text style={{ color: 'black' }}> {this.state.List[key].QT} </Text></Button><Button disabled={(this.state.List[key].QT >= this.state.Stock[key].QT)} onPress={() => { this.state.List[key].QT++; this.setState({}) }} transparent style={{ width: 30, height: 30, alignSelf: 'center' }} ><Icon style={{ fontSize: 30 }} type='Entypo' name='squared-plus'></Icon></Button></Row>
-                      <Text />
-                      {this.calPrice(key)}
-                      <Text style={{ alignSelf: 'flex-end' }}>Price:{this.state.List[key].Price}</Text>
-                    </Right>
-                  </Row>
-                </Col> */}
               </CardItem>
             </Card>
           );
@@ -264,9 +261,54 @@ export default class Sales extends Component {
         </Header>
         <Root>
           <List>{SearchList}</List>
-          <Content padder>{Insale()}</Content>
-
-
+          <Content padder>
+            {Insale()}
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={this.state.ModalConfirm}
+            >
+              <Container style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                <Container style={{
+                  width: 300,
+                }}>
+                  <Header
+                    androidStatusBarColor="#87cefa"
+                    style={{ backgroundColor: "#87cefa" }}
+                  >
+                    <Left />
+                    <Body>
+                      <Title>Confirm order!</Title>
+                    </Body>
+                    <Right />
+                  </Header>
+                  <Content>
+                    <Col>
+                      <Row>
+                        <Text>Customer : </Text>
+                        {this.state.CurrentCustomer()}
+                      </Row>
+                    </Col>
+                  </Content>
+                  <Footer style={{ backgroundColor: "#87cefa" }} >
+                    <FooterTab >
+                      <Button danger block onPress={() => {
+                        this.setState({ ModalConfirm: false })
+                      }} ><Icon style={{ width: 30, color: "#ffffff" }} name="circle-with-cross" type="Entypo" /><Text style={{ color: 'white' }}>Cancel</Text></Button>
+                      <Button info block onPress={() => {
+                        this.resetState();
+                        this.setState({ ModalConfirm: false })
+                        Toast.show({
+                          text: 'Complete!',
+                          position: "top"
+                        })
+                      }} ><Icon style={{ width: 30, color: "#ffffff" }} name="checkcircleo" type="AntDesign" /><Text style={{ color: 'white' }}>Confirm</Text></Button>
+                    </FooterTab>
+                  </Footer>
+                </Container>
+              </Container>
+            </Modal>
+          </Content>
           <Footer style={{ backgroundColor: "#87cefa", height: 70, borderTopWidth: 1, borderColor: '#808080' }}  >
             <FooterTab style={{ backgroundColor: "#ffffff", justifyContent: 'flex-end' }}>
               <Col style={{ justifyContent: 'flex-end', marginHorizontal: 5 }}>
@@ -293,13 +335,14 @@ export default class Sales extends Component {
           </Footer>
           <Footer style={{ backgroundColor: "#87cefa" }} >
             <FooterTab >
+              <Button danger disabled={(Object.keys(this.state.List).length <= 0)} block onPress={() => {
+                this.resetState();
+              }} ><Icon style={{ width: 30, color: "#ffffff" }} name="circle-with-cross" type="Entypo" /><Text style={{ color: 'white' }}>Clear</Text></Button>
               <Button info disabled={(Object.keys(this.state.List).length <= 0)} block onPress={() => {
-                Object.keys(this.state.List).map(key => {
-                  delete this.state.List[key]
-                })
-                this.setState({ Customer_id: '' })
-                alert("Success!")
-              }} ><Text style={{ color: 'white' }}>Sale</Text><Icon style={{ width: 30, color: "#ffffff" }} name="shopping-cart" type="Feather" /></Button>
+                this.setState({ ModalConfirm: true })
+              }} >
+                <Icon style={{ width: 30, color: "#ffffff" }} name="shopping-cart" type="Feather" />
+                <Text style={{ color: 'white' }}>Sale</Text></Button>
             </FooterTab>
           </Footer>
         </Root>
